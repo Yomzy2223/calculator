@@ -11,7 +11,7 @@ const Mortgage = () => {
   console.log(state);
   return (
     <div className="flex flex-col items-center gap-6 p-6 max-w-[1000px] m-auto ">
-      <h2 className="lg:text-xl text-primary sm:text-lg">
+      <h2 className="lg:text-xl text-primary sm:text-lg text-center">
         Calculate your{" "}
         <span className="lg:text-3xl font-extrabold sm:text-2xl">
           Mortgage Loan
@@ -89,12 +89,12 @@ const Mortgage = () => {
       <Card className="flex flex-col my-4 w-full max-w-[500px]">
         <CardContent className="!p-0 text-primary">
           <div className="bg-muted p-6">
-            <p className="font-bold sm:text-lg lg:text-xl">$456,789</p>
-            <p className="text-muted-foreground sm:text-xs lg:text-xs">
+            <p className="font-bold text-lg sm:text-lg lg:text-xl">$456,789</p>
+            <p className="text-muted-foreground text-xs sm:text-xs lg:text-xs">
               Your estimated monthly payment with PMI.
             </p>
           </div>
-          <div className="border-b border-border p-6 sm:text-xs lg:text-xs space-y-1">
+          <div className="border-b border-border p-6 text-xs sm:text-xs lg:text-xs space-y-1">
             <div className="flex justify-between">
               <span>PMI:</span>
               <span>$4,678</span>
@@ -109,7 +109,7 @@ const Mortgage = () => {
             </div>
           </div>
 
-          <div className="border-b border-border p-6 sm:text-xs lg:text-xs space-y-1">
+          <div className="border-b border-border p-6 text-xs sm:text-xs lg:text-xs space-y-1">
             <div className="flex justify-between">
               <span>PMI End Date:</span>
               <span>Feb, 2025</span>
