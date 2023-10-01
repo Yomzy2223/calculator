@@ -1,4 +1,5 @@
 export const initialState = {
+  homeValue: "",
   interestRate: 0,
   downPayment: "",
   loanTerm: "",
@@ -16,6 +17,25 @@ export const reducer = (
 ) => {
   switch (action.type) {
     //
+    case "Home Value": {
+      let val = parseFloat(action.payload.toString());
+      if (val < 0) return state;
+
+      let downPayment = state.downPayment;
+      let perc = state.downPaymentPerc;
+      if (perc) {
+        downPayment = (state.downPaymentPerc / 100) * val;
+        downPayment = parseFloat(downPayment).toFixed(2);
+      }
+
+      return {
+        ...state,
+        homeValue: val || "",
+        downPayment,
+      };
+    }
+
+    //
     case "Interest Rate": {
       let val = parseFloat(action.payload.toString());
       if (val < 0) return state;
@@ -31,9 +51,11 @@ export const reducer = (
       let val = parseFloat(action.payload.toString());
       if (val < 0) return state;
 
+      let perc: string | number = ((val || 0) * 100) / state.homeValue;
+
       return {
         ...state,
-        downPayment: val || "",
+        downPayment: (perc > 100 ? state.homeValue : val) || "",
       };
     }
 
@@ -60,7 +82,7 @@ export const reducer = (
     }
 
     //
-    case "Monthly Depts": {
+    case "Monthly Debts": {
       let val = parseFloat(action.payload.toString());
       if (val < 0) return state;
 

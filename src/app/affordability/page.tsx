@@ -10,6 +10,7 @@ import { allMonths } from "@/lib/utils";
 const Affordability = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const {
+    homeValue,
     interestRate,
     downPayment,
     loanTerm,
@@ -22,49 +23,46 @@ const Affordability = () => {
   } = state;
 
   const monthlyInterestRate = parseFloat(((interestRate || 0) / 12).toFixed(2));
-  const loanTermMonths = parseFloat(((loanTerm || 0) * 12).toFixed(2));
+
+  const loanTermInMonths = (loanTerm || 0) * 12 || 1;
+  const loan = (parseFloat(homeValue) || 0) - (parseFloat(downPayment) || 0);
+  const monthlyInterest = (interestRate || 0) / 100 / 12;
+  const n = loanTermInMonths;
+
+  let monthlyPayment: string | number =
+    (loan * monthlyInterest * Math.pow(1 + monthlyInterest, n)) /
+    (Math.pow(1 + monthlyInterest, n) - 1);
+  monthlyPayment = parseFloat(monthlyPayment.toFixed(2));
+
+  const repaymentPerYear = parseFloat((monthlyPayment * 12).toString()).toFixed(
+    2
+  );
 
   const maxHomePrice =
-    (parseFloat(downPayment) + parseFloat(monthlyDebts)) /
-      ((1 -
-        Math.pow(
-          1 + parseFloat(monthlyInterestRate.toString()),
-          -parseFloat(loanTermMonths.toString())
-        )) /
-        parseFloat(monthlyInterestRate.toString())) -
-    parseFloat(propertyInsurance) -
-    parseFloat(HOA) -
-    parseFloat(propertyTax) / 12 -
-    parseFloat(PMI);
-
-  const maxMonthlyPayment =
-    (parseFloat(annualIncome) / 12 - parseFloat(monthlyDebts)) *
-      ((1 -
-        Math.pow(
-          1 + parseFloat(monthlyInterestRate.toString()),
-          -parseFloat(loanTermMonths.toString())
-        )) /
-        parseFloat(monthlyInterestRate.toString())) -
-    parseFloat(propertyInsurance) -
-    parseFloat(HOA) -
-    parseFloat(propertyTax) / 12 -
-    parseFloat(PMI);
+    (parseFloat(annualIncome) || 0) -
+    (parseFloat(repaymentPerYear) || 0) -
+    (parseFloat(propertyInsurance) || 0) -
+    (parseFloat(monthlyDebts) || 0) * 12 -
+    (parseFloat(HOA) || 0) * 12 -
+    (parseFloat(propertyTax) || 0) -
+    (parseFloat(PMI) || 0);
 
   return (
     <div className="flex flex-col items-center gap-6 p-6 max-w-[1000px] m-auto ">
-      <div className="lg:text-xl text-primary sm:text-lg text-center">
-        <h2 className="lg:text-3xl font-extrabold sm:text-2xl">
-          Affordability Calculator
-        </h2>
-        <span className="text-sm md:text-base">
-          Curious about how much you can afford to spend on a home? Use our
-          calculator to get an estimate on your maximum budget.
-        </span>
-      </div>
-      <div className="flex flex-col gap-4 items-center md:flex-row md:items-start">
+      <div className="flex flex-col gap-4 items-center">
         <Card className="flex flex-col flex-[1.2] my-4 p-6 w-full overflow-auto">
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="flex gap-4">
+              <InputWithLabel
+                type="number"
+                label="Home Value:"
+                placeholder="0.00"
+                leftText="$"
+                DType="Home Value"
+                value={state.homeValue}
+                dispatch={dispatch}
+                layout2={true}
+              />
               <InputWithLabel
                 label="Interest Rate"
                 rightText="%"
@@ -114,10 +112,10 @@ const Affordability = () => {
               />
               <InputWithLabel
                 type="number"
-                label="Monthly Depts"
+                label="Monthly Debts"
                 placeholder="0.00"
                 leftText="$"
-                DType="Monthly Depts"
+                DType="Monthly Debts"
                 value={state.monthlyDebts}
                 dispatch={dispatch}
                 layout2={true}
@@ -178,10 +176,7 @@ const Affordability = () => {
           <CardContent className="!p-0 text-primary">
             <div className="bg-muted p-6">
               <p className="font-bold text-lg sm:text-lg lg:text-xl">
-                $
-                {maxMonthlyPayment > 0
-                  ? (maxMonthlyPayment || 0).toFixed(2)
-                  : 0}
+                ${monthlyPayment > 0 ? (monthlyPayment || 0).toFixed(2) : 0}
               </p>
               <p className="text-muted-foreground text-xs sm:text-xs lg:text-xs">
                 Maximum Monthly Payment
@@ -197,10 +192,7 @@ const Affordability = () => {
               <div className="flex justify-between">
                 <span>Maximum Monthly Payment:</span>
                 <span>
-                  $
-                  {maxMonthlyPayment > 0
-                    ? (maxMonthlyPayment || 0).toFixed(2)
-                    : 0}
+                  ${monthlyPayment > 0 ? (monthlyPayment || 0).toFixed(2) : 0}
                 </span>
               </div>
             </div>

@@ -20,9 +20,17 @@ export const reducer = (
       let val = parseFloat(action.payload.toString());
       if (val < 0) return state;
 
+      let downPayment = state.downPayment;
+      let perc = state.downPaymentPerc;
+      if (perc) {
+        downPayment = (state.downPaymentPerc / 100) * val;
+        downPayment = parseFloat(downPayment).toFixed(2);
+      }
+
       return {
         ...state,
         homePrice: val || "",
+        downPayment,
       };
     }
 
@@ -34,6 +42,22 @@ export const reducer = (
       return {
         ...state,
         downPayment: val || "",
+      };
+    }
+
+    //
+    case "Down Payment Perc": {
+      let val = parseFloat(action.payload?.toString());
+      if (val < 0) return state;
+
+      if (state.homePrice <= 0) return state;
+      let downPayment: string | number = (val / 100) * state.homePrice;
+      downPayment = downPayment.toFixed(2);
+
+      return {
+        ...state,
+        downPaymentPerc: val || "",
+        downPayment,
       };
     }
 

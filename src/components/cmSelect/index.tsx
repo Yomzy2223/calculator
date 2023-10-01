@@ -49,9 +49,9 @@ const CMSelect = ({
   return (
     <div
       className={cn(
-        "flex items-center justify-between flex-wrap gap-x-4 gap-y-2",
+        "flex items-center justify-between flex-wrap gap-x-4 gap-y-2 px-5 pb-5 md:px-6 md:pb-5",
         {
-          "flex-col items-start w-full": layout2,
+          "flex-col items-start w-full px-0 md:px-0 pb-0 md:pb-0": layout2,
         }
       )}
     >

@@ -10,66 +10,53 @@ import { allMonths } from "@/lib/utils";
 const Refinancing = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const {
-    interestRate,
+    homePrice,
     downPayment,
+    downPaymentPerc,
+    interestRate,
     loanTerm,
-    annualIncome,
-    monthlyDebts,
+    propertyType,
     propertyInsurance,
     propertyTax,
     HOA,
-    PMI,
   } = state;
 
-  const monthlyInterestRate = parseFloat(((interestRate || 0) / 12).toFixed(2));
-  const loanTermMonths = parseFloat(((loanTerm || 0) * 12).toFixed(2));
+  const monthlyHOA = state.HOA || 0;
+  const monthlyTax = ((propertyTax || 0) / 12).toFixed(2);
+  const monthlyInsurance = (propertyInsurance / 12).toFixed(2) || 0;
 
-  const maxHomePrice =
-    (parseFloat(downPayment) + parseFloat(monthlyDebts)) /
-      ((1 -
-        Math.pow(
-          1 + parseFloat(monthlyInterestRate.toString()),
-          -parseFloat(loanTermMonths.toString())
-        )) /
-        parseFloat(monthlyInterestRate.toString())) -
-    parseFloat(propertyInsurance) -
-    parseFloat(HOA) -
-    parseFloat(propertyTax) / 12 -
-    parseFloat(PMI);
+  const loanTermInMonths = (loanTerm || 0) * 12 || 1;
+  const monthlyInterest = parseFloat(
+    ((interestRate || 0) / 100 / 12).toFixed(2)
+  );
+  const n = loanTermInMonths;
+  const loan = (parseFloat(homePrice) || 0) - (parseFloat(downPayment) || 0);
 
-  const maxMonthlyPayment =
-    (parseFloat(annualIncome) / 12 - parseFloat(monthlyDebts)) *
-      ((1 -
-        Math.pow(
-          1 + parseFloat(monthlyInterestRate.toString()),
-          -parseFloat(loanTermMonths.toString())
-        )) /
-        parseFloat(monthlyInterestRate.toString())) -
-    parseFloat(propertyInsurance) -
-    parseFloat(HOA) -
-    parseFloat(propertyTax) / 12 -
-    parseFloat(PMI);
+  let monthlyPayment: string | number =
+    (loan * monthlyInterest * Math.pow(1 + monthlyInterest, n)) /
+    (Math.pow(1 + monthlyInterest, n) - 1);
+  monthlyPayment = parseFloat(monthlyPayment.toFixed(2));
+
+  const totalMonthlyPayment = parseFloat(
+    (
+      monthlyPayment +
+      parseFloat(monthlyTax) +
+      parseFloat(monthlyInsurance.toString()) +
+      parseFloat(monthlyHOA)
+    ).toFixed(2)
+  );
 
   return (
     <div className="flex flex-col items-center gap-6 p-6 max-w-[1000px] m-auto ">
-      <div className="lg:text-xl text-primary sm:text-lg text-center">
-        <h2 className="lg:text-3xl font-extrabold sm:text-2xl">
-          Refinancing Calculator
-        </h2>
-        <span className="text-sm md:text-base">
-          What does a monthly mortgage payment look like for you? Get an
-          estimate with some basic information.
-        </span>
-      </div>
-      <div className="flex flex-col gap-4 items-center md:flex-row md:items-start">
+      <div className="flex flex-col gap-4 items-center">
         <Card className="flex flex-col flex-[1.2] my-4 p-6 w-full overflow-auto">
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="flex gap-4">
               <InputWithLabel
                 label="Home Price"
                 placeholder="0.00"
                 leftText="$"
-                rightDType="Home Price"
+                DType="Home Price"
                 value={state.homePrice}
                 dispatch={dispatch}
                 layout2={true}
@@ -171,8 +158,8 @@ const Refinancing = () => {
             <div className="bg-muted p-6">
               <p className="font-bold text-lg sm:text-lg lg:text-xl">
                 $
-                {maxMonthlyPayment > 0
-                  ? (maxMonthlyPayment || 0).toFixed(2)
+                {totalMonthlyPayment > 0
+                  ? (totalMonthlyPayment || 0).toFixed(2)
                   : 0}
               </p>
               <p className="text-muted-foreground text-xs sm:text-xs lg:text-xs">
@@ -182,19 +169,19 @@ const Refinancing = () => {
             <div className="border-b border-border p-6 text-xs sm:text-xs lg:text-xs space-y-1">
               <div className="flex justify-between">
                 <span>Principal & Interest</span>
-                <span>$343</span>
+                <span>${monthlyPayment > 0 ? monthlyPayment : 0}</span>
               </div>
               <div className="flex justify-between">
                 <span>Property Insurance</span>
-                <span>${state.propertyInsurance}</span>
+                <span>${monthlyInsurance}</span>
               </div>
               <div className="flex justify-between">
                 <span>Property Tax</span>
-                <span>${state.propertyTax || 0}</span>
+                <span>${monthlyTax || 0}</span>
               </div>
               <div className="flex justify-between">
                 <span>HOA Fees</span>
-                <span>${state.HOA || 0}</span>
+                <span>${HOA || 0}</span>
               </div>
             </div>
           </CardContent>

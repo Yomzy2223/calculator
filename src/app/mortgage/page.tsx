@@ -24,28 +24,25 @@ const Mortgage = () => {
   const loan = state.loanAmount || 0;
   const monthlyInterest = (state.interestRate || 0) / 100 / 12;
   const n = loanTermInMonths;
+
   let monthlyPayment: string | number =
     (loan * monthlyInterest * Math.pow(1 + monthlyInterest, n)) /
-    Math.pow(1 + monthlyInterest, n - 1);
+    (Math.pow(1 + monthlyInterest, n) - 1);
   monthlyPayment = parseFloat(monthlyPayment.toFixed(2));
 
-  const totalMonthlyPayment = (
-    monthlyPayment +
-    parseFloat(monthlyPMI) +
-    parseFloat(monthlyTax) +
-    parseFloat(monthlyInsurance.toString()) +
-    parseFloat(monthlyHOA)
-  ).toFixed(2);
+  const totalMonthlyPayment = parseFloat(
+    (
+      monthlyPayment +
+      parseFloat(monthlyPMI) +
+      parseFloat(monthlyTax) +
+      parseFloat(monthlyInsurance.toString()) +
+      parseFloat(monthlyHOA)
+    ).toFixed(2)
+  );
 
   return (
     <div className="flex flex-col items-center gap-6 p-6 max-w-[1000px] m-auto ">
-      <h2 className="lg:text-xl text-primary sm:text-lg text-center">
-        Calculate your{" "}
-        <span className="lg:text-3xl font-extrabold sm:text-2xl">
-          Mortgage Loan
-        </span>
-      </h2>
-      <div className="flex flex-col gap-4 items-center md:flex-row md:items-start">
+      <div className="flex flex-col gap-4 items-center">
         <Card className="flex flex-col flex-[1.2] my-4 py-6 w-full overflow-auto">
           <div>
             <InputWithLabel
@@ -146,7 +143,7 @@ const Mortgage = () => {
           <CardContent className="!p-0 text-primary">
             <div className="bg-muted p-6">
               <p className="font-bold text-lg sm:text-lg lg:text-xl">
-                {totalMonthlyPayment}
+                ${totalMonthlyPayment > 0 ? totalMonthlyPayment : 0}
               </p>
               <p className="text-muted-foreground text-xs sm:text-xs lg:text-xs">
                 Your estimated monthly payment with PMI.
