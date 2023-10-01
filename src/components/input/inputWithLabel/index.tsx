@@ -16,7 +16,8 @@ import { cmFieldPropType } from "./constants";
 
 const InputWithLabel = ({
   label,
-  type,
+  type = "text",
+  value,
   placeholder,
   sliderValue,
   disabled,
@@ -24,53 +25,67 @@ const InputWithLabel = ({
   rightText,
   onChange,
   onSliderValueChange,
+  sliderStep,
+  dispatch,
+  DType,
+  rightDType,
+  hideLeft,
 }: cmFieldPropType) => {
-  const [valueR, setValueR] = useState(sliderValue || 0);
-
-  useEffect(() => {
-    if (sliderValue) setValueR(sliderValue);
-  }, [sliderValue]);
-
+  //
   const handleSlider = (value: (number | string)[]) => {
-    if (!sliderValue) return;
-    setValueR(parseInt(value[0].toString()));
+    if (dispatch && rightDType) {
+      dispatch({ type: rightDType, payload: value[0] });
+    }
     onSliderValueChange && onSliderValueChange(value);
   };
 
+  const handleLeftChange = (e: any) => {
+    let value = e.target.value;
+    dispatch && DType && dispatch({ type: DType, payload: value });
+    onChange && onChange(e);
+  };
+
   const handleRightChange = (e: any) => {
-    setValueR(parseInt(e.target.value || 0));
+    let value = e.target.value;
+    // const value = parseFloat(e.target.value) || 0;
+    if (dispatch && rightDType && value <= 100) {
+      dispatch({ type: rightDType, payload: value });
+    }
   };
 
   return (
     <CardContent className="flex flex-col gap-2 w-full">
       <div className="flex items-center justify-between flex-wrap gap-x-4 gap-y-2 ">
         <Label
-          className={`text-sm leading-3 font-normal text-label min-w-[140px]`}
+          className={`text-sm leading-3 font-normal text-label min-w-[100px] md:min-w-[140px]`}
         >
           {label}
         </Label>
-        <div className="flex flex-1 items-center !mt-0 relative max-w-[80%]">
+        <div className="flex flex-1 items-center !mt-0 relative max-w-[90%] md:max-w-[80%]">
           {leftText && (
             <span className="flex items-center text-sm border-border border-t border-b border-l rounded-l h-8 p-2 bg-gray-100">
               {leftText}
             </span>
           )}
-          <Input
-            type={type}
-            placeholder={placeholder}
-            disabled={disabled}
-            className={cn("rounded-none flex-1 min-w-[50px]", {
-              " border-r-0": sliderValue,
-              "rounded-l": !leftText,
-            })}
-            onChange={onChange}
-          />
-          {typeof sliderValue === "number" && (
+          {!hideLeft && (
             <Input
-              type="text"
-              value={valueR}
-              onChange={handleRightChange}
+              type={type}
               placeholder={placeholder}
+              disabled={disabled}
+              value={value}
+              onChange={handleLeftChange}
+              className={cn("rounded-none flex-1 min-w-[50px]", {
+                " border-r-0": sliderValue,
+                "rounded-l": !leftText,
+              })}
+            />
+          )}
+          {(typeof sliderValue === "number" ||
+            typeof sliderValue === "string") && (
+            <Input
+              placeholder={placeholder}
+              value={sliderValue}
+              onChange={handleRightChange}
               disabled={disabled}
               className={cn("rounded-none flex-1 min-w-[50px]", {
                 "rounded-r": !leftText,
@@ -84,14 +99,14 @@ const InputWithLabel = ({
           )}
         </div>
       </div>
-      {typeof sliderValue === "number" && (
+      {(typeof sliderValue === "number" || typeof sliderValue === "string") && (
         <div>
           <Slider
-            defaultValue={[valueR]}
+            defaultValue={[parseInt(sliderValue || "0")]}
             max={100}
-            step={1}
+            step={sliderStep || 1}
             onValueChange={handleSlider}
-            value={[valueR]}
+            value={[parseInt(sliderValue || "0")]}
           />
         </div>
       )}

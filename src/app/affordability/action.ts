@@ -13,7 +13,7 @@ export const initialState = {
 
 export const reducer = (
   state: any,
-  action: { type: string; payload?: string }
+  action: { type: string; payload?: string | number }
 ) => {
   switch (action.type) {
     case "Home Value":
