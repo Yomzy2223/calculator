@@ -17,4 +17,5 @@ export interface cmFieldPropType {
   DType?: string;
   rightDType?: string;
   hideLeft?: boolean;
+  layout2?: boolean;
 }

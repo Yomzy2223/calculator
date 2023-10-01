@@ -1,70 +1,106 @@
 export const initialState = {
-  homeValue: "",
+  homePrice: "",
   downPayment: "",
-  loanAmount: "",
-  interestRate: "",
+  downPaymentPerc: "",
+  interestRate: 0,
   loanTerm: "",
-  startDate: "",
+  propertyType: "",
+  propertyInsurance: "",
   propertyTax: "",
-  PMI: "",
-  homeInsurance: "",
   HOA: "",
 };
 
 export const reducer = (
   state: any,
-  action: { type: string; payload?: string | number }
+  action: { type: string; payload: string | number }
 ) => {
   switch (action.type) {
-    case "Home Value":
+    //
+    case "Home Price": {
+      let val = parseFloat(action.payload.toString());
+      if (val < 0) return state;
+
       return {
         ...state,
-        homeValue: action.payload,
+        homePrice: val || "",
       };
-    case "Down Payment":
+    }
+
+    //
+    case "Down Payment": {
+      let val = parseFloat(action.payload.toString());
+      if (val < 0) return state;
+
       return {
         ...state,
-        downPayment: action.payload,
+        downPayment: val || "",
       };
-    case "Loan Amount":
+    }
+
+    //
+    case "Interest Rate": {
+      let val = parseFloat(action.payload.toString());
+      if (val < 0) return state;
+
       return {
         ...state,
-        loanAmount: action.payload,
+        interestRate: val || "",
       };
-    case "Interest Rate":
+    }
+
+    //
+    case "Loan Term": {
+      let val = parseFloat(action.payload.toString());
+      if (val < 0) return state;
+
       return {
         ...state,
-        interestRate: action.payload,
+        loanTerm: val || "",
       };
-    case "Loan Term":
+    }
+
+    //
+    case "Property Type": {
+      let val = parseFloat(action.payload.toString());
+      if (val < 0) return state;
+
       return {
         ...state,
-        loanTerm: action.payload,
+        propertyType: val || "",
       };
-    case "Start Date":
+    }
+
+    //
+    case "Property Insurance": {
+      let val = parseFloat(action.payload.toString());
+      if (val < 0) return state;
+
       return {
         ...state,
-        startDate: action.payload,
+        propertyInsurance: val || "",
       };
-    case "Property Tax":
+    }
+
+    //
+    case "Property Tax": {
+      let val = parseFloat(action.payload.toString());
+      if (val < 0) return state;
+
       return {
         ...state,
-        propertyTax: action.payload,
+        propertyTax: val || "",
       };
-    case "PMI":
+    }
+
+    //
+    case "HOA": {
+      let val = parseFloat(action.payload.toString());
+      if (val < 0) return state;
+
       return {
         ...state,
-        PMI: action.payload,
+        HOA: val || "",
       };
-    case "Home Insurance":
-      return {
-        ...state,
-        homeInsurance: action.payload,
-      };
-    case "HOA":
-      return {
-        ...state,
-        HOA: action.payload,
-      };
+    }
   }
 };

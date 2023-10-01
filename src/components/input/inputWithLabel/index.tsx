@@ -30,6 +30,7 @@ const InputWithLabel = ({
   DType,
   rightDType,
   hideLeft,
+  layout2,
 }: cmFieldPropType) => {
   //
   const handleSlider = (value: (number | string)[]) => {
@@ -54,14 +55,32 @@ const InputWithLabel = ({
   };
 
   return (
-    <CardContent className="flex flex-col gap-2 w-full">
-      <div className="flex items-center justify-between flex-wrap gap-x-4 gap-y-2 ">
+    <CardContent
+      className={cn("flex flex-col gap-2 w-full", {
+        "p-0": layout2,
+      })}
+    >
+      <div
+        className={cn(
+          "flex items-center justify-between flex-wrap gap-x-4 gap-y-2",
+          {
+            "flex-col items-start": layout2,
+          }
+        )}
+      >
         <Label
           className={`text-sm leading-3 font-normal text-label min-w-[100px] md:min-w-[140px]`}
         >
           {label}
         </Label>
-        <div className="flex flex-1 items-center !mt-0 relative max-w-[90%] md:max-w-[80%]">
+        <div
+          className={cn(
+            "flex flex-1 items-center !mt-0 relative max-w-[90%] md:max-w-[80%]",
+            {
+              "max-w-full md:max-w-full w-full": layout2,
+            }
+          )}
+        >
           {leftText && (
             <span className="flex items-center text-sm border-border border-t border-b border-l rounded-l h-8 p-2 bg-gray-100">
               {leftText}

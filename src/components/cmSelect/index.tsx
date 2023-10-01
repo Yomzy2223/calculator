@@ -28,6 +28,7 @@ const CMSelect = ({
   defaultValue,
   value,
   valueRight,
+  layout2,
 }: propsType) => {
   const showRight = valueRight !== undefined;
 
@@ -46,12 +47,25 @@ const CMSelect = ({
   };
 
   return (
-    <div className="flex items-center gap-4 px-6 pb-6 ">
+    <div
+      className={cn(
+        "flex items-center justify-between flex-wrap gap-x-4 gap-y-2",
+        {
+          "flex-col items-start w-full": layout2,
+        }
+      )}
+    >
       <Label className="text-sm leading-3 font-normal min-w-[100px] md:min-w-[140px]">
         {mainLabel}
       </Label>
-
-      <div className="flex flex-1 items-center  !mt-0 relative max-w-[90%] md:max-w-[80%]">
+      <div
+        className={cn(
+          "flex flex-1 items-center !mt-0 relative max-w-[90%] md:max-w-[80%]",
+          {
+            "max-w-full md:max-w-full w-full": layout2,
+          }
+        )}
+      >
         <Select
           onValueChange={handleSelectChange}
           defaultValue={defaultValue}

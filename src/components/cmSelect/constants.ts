@@ -13,4 +13,5 @@ export interface propsType {
   value: string;
   valueRight?: string;
   dispatch?: Dispatch<{ type: string; payload: string | number }>;
+  layout2?: boolean;
 }

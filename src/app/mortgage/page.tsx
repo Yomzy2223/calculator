@@ -45,7 +45,7 @@ const Mortgage = () => {
           Mortgage Loan
         </span>
       </h2>
-      <div className="flex flex-col gap-4 md:flex-row">
+      <div className="flex flex-col gap-4 items-center md:flex-row md:items-start">
         <Card className="flex flex-col flex-[1.2] my-4 py-6 w-full overflow-auto">
           <div>
             <InputWithLabel
