@@ -142,7 +142,7 @@ const Mortgage = () => {
         <Card className="flex flex-col flex-[0.8] my-4 w-full max-w-[500px] h-max">
           <CardContent className="!p-0 text-primary">
             <div className="bg-muted p-6">
-              <p className="font-bold text-lg sm:text-lg lg:text-xl">
+              <p className="font-bold text-xl sm:text-2xl lg:text-3xl">
                 ${totalMonthlyPayment > 0 ? totalMonthlyPayment : 0}
               </p>
               <p className="text-muted-foreground text-xs sm:text-xs lg:text-xs">
